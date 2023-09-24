@@ -17,17 +17,10 @@ jobs:
       run: |
         docker pull trufflesecurity/trufflehog:latest
 
-    - name: Clone Repository Locally
-      run: |
-        cd $GITHUB_WORKSPACE
-        git clone https://github.com/${{ github.repository }} myrepo
-        cd myrepo
-      working-directory: ./myrepo
-
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest git . --since-commit ${{ github.event.before }})
+        output=$(docker run --name trufflehog -v "$(pwd):/workdir" trufflesecurity/trufflehog:latest "git file:///workdir --since-commit HEAD)
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
