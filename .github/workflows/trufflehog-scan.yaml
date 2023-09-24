@@ -20,7 +20,7 @@ jobs:
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --no-verification)
+        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --no-verification --since-commit ${{ github.event.before }})
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
