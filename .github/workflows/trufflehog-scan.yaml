@@ -13,9 +13,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Update branch
-      run: git fetch --all
-
     - name: Set up TruffleHog
       run: |
         docker pull trufflesecurity/trufflehog:latest
@@ -23,7 +20,7 @@ jobs:
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --branch ${{ github.ref }})
+        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --since-commit HEAD)
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
