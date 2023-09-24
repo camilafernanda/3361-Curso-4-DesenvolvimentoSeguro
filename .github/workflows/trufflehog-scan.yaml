@@ -19,6 +19,7 @@ jobs:
 
     - name: Clone Repository Locally
       run: |
+        mkdir myrepo
         git clone https://github.com/${{ github.repository }} myrepo
         cd myrepo
       working-directory: ./myrepo
