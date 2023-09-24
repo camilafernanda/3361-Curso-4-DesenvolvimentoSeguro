@@ -17,10 +17,16 @@ jobs:
       run: |
         docker pull trufflesecurity/trufflehog:latest
 
+    - name: Clone Repository Locally
+      run: |
+        git clone https://github.com/${{ github.repository }} myrepo
+        cd myrepo
+      working-directory: ./myrepo
+
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --no-verification --since-commit ${{ github.event.before }})
+        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest git . --since-commit ${{ github.event.before }})
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
