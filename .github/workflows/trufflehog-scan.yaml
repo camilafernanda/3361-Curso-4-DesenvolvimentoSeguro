@@ -10,8 +10,10 @@ jobs:
    runs-on: ubuntu-latest
 
    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Set up TruffleHog
       run: |
@@ -20,7 +22,7 @@ jobs:
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt --since-commit HEAD)
+        output=$(docker run --rm -v $PWD:/pwd trufflesecurity/trufflehog:latest github --repo https://github.com/${{ github.repository }} --exclude-paths=/pwd/trufflehog-exclude-path.txt)
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
