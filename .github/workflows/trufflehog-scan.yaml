@@ -20,7 +20,7 @@ jobs:
     - name: Run TruffleHog
       id: trufflehog
       run: |
-        output=$(docker run --name trufflehog -v "$(pwd):/workdir" trufflesecurity/trufflehog:latest git file:///workdir --since-commit ${{ github.event.pull_request.base.ref }})
+        output=$(docker run --name trufflehog -v "$(pwd):/workdir" trufflesecurity/trufflehog:latest git file:///workdir --since-commit ${{ github.event.pull_request.base.sha }})
         echo "::set-output name=trufflehog_output::$(echo "$output" | tr -d '\r')"
 
     - name: Create issue
